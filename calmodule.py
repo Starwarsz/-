@@ -209,7 +209,7 @@ def embedresult_goldget(response:json):
 
     return embedresult_goldget
 
-def embedresult_sasalist(response:json, 닉네임:str):
+def embedresult_sasalist(닉네임:str):
     sasalist = ""
 
     i=0
