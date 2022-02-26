@@ -325,7 +325,6 @@ class InfoOptions(discord.ui.View):
         self.embedres6 = embedres6
         self.embedres7 = embedres7
         self.embedres8 = embedres8
-        self.add_item(discord.ui.Button(label="문의", url="https://discord.gg/D3gRDmbkJK", row=3))
         # self.add_item(discord.ui.Select(options=[
         #     discord.SelectOption(
         #         label="test"
