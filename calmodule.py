@@ -220,7 +220,7 @@ def embedresult_sasalist(response:json, 닉네임:str):
     if i == 5:
         sasalist = sasalist + "\n(게시물이 개수가 5개 이상입니다. 5개 까지만 표시)" 
 
-    embedresult_sasalist = discord.Embed(title="사사게 (" + 닉네임 + ")", color=discord.Color.blurple(), description="상단 파란색 사사게 클릭시 이동", url=response["SasaUrl"])
+    embedresult_sasalist = discord.Embed(title="사사게 (" + 닉네임 + ")", color=discord.Color.gold(), description="상단 파란색 사사게 클릭시 이동", url=response["SasaUrl"])
 
     embedresult_sasalist.add_field(
         name="▫️ 사사게 검색 정보(최근 1만 게시글)",
