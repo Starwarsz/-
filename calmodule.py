@@ -294,68 +294,111 @@ def embedresult_gearlist(response:json):
     gearlist = ""
     gearlist2 = ""
 
-    embedresult_gearlist = discord.Embed(title="장비", color=discord.Color.brand_red())
+   for (const i in ItemList) {
+                            try {
+                                eqname = response.data.Items[ItemList[i]].Name
+                                tri = ""
 
-    for items in ItemList:
-        try:
-            eqname = response["Items"][items]["Name"]
-            tri = ""
-            for t in response["Items"][items]["Tri"]:
-                tri = tri + "[`"+t["SkillName"] +"`] " + t["Effect"] + "\n"
-            gearlist = gearlist + ("**◻"+eqname + " | `품질` : " + response["Items"][items]["Quality"] + "**\n" + tri) + "\n"
-        except Exception:
-            pass
+                                if (response.data.Items[ItemList[i]].Tri !== "트라이포드 효과 적용 불가") {
+                                    for (const j in response.data.Items[ItemList[i]].Tri) {
+                                        tri = tri + "[`" + response.data.Items[ItemList[i]].Tri[j].SkillName + "`] " + response.data.Items[ItemList[i]].Tri[j].Effect + "\n"
+                                    }
+                                }
+                                qualemoji = "⬜"
+                                qual = parseInt(response.data.Items[ItemList[i]].Quality)
 
-    for items in ItemList2:
-        try:
-            eqname = response["Items"][items]["Name"]
-            tri = ""
-            for t in response["Items"][items]["Tri"]:
-                tri = tri + "[`"+t["SkillName"] +"`] " + t["Effect"] + "\n"
-            gearlist2 = gearlist2 + ("**◻"+eqname + " | `품질` : " + response["Items"][items]["Quality"] + "**\n" + tri) + "\n"
-        except Exception:
-            pass
+                                if (0 < qual && qual < 10) { qualemoji = "🟥" }
+                                if (10 <= qual && qual < 30) { qualemoji = "🟨" }
+                                if (30 <= qual && qual < 70) { qualemoji = "🟩" }
+                                if (70 <= qual && qual < 90) { qualemoji = "🟦" }
+                                if (90 <= qual && qual < 100) { qualemoji = "🟪" }
+                                if (qual === 100) { qualemoji = "🟧" }
 
-    if gearlist+gearlist2 == "":
-        gearlist = ("`장착된 장비가 없습니다./장비 데이터를 불러오지 못 했습니다`")
+                                gearlist = gearlist + ("**" + qualemoji + " " + eqname + "** \n [`품질`] : " + response.data.Items[ItemList[i]].Quality + "\n" + tri) + "\n"
+                            } catch (error) {
+                            }
+                        }
 
-    if gearlist == "`장착된 장비가 없습니다./장비 데이터를 불러오지 못 했습니다`":   
-        if gearlist2 == "":
-            embedresult_gearlist.add_field(
-                name="▫️ 현재 장착중인 장비 목록",
-                value=(gearlist),
-                inline=True
-            )
-        else:
-            embedresult_gearlist.add_field(
-                name="▫️ 현재 장착중인 장비 목록",
-                value=(gearlist2),
-                inline=True
-            )
-    else:
-        if gearlist2 == "":
-            embedresult_gearlist.add_field(
-                name="▫️ 현재 장착중인 장비 목록",
-                value=(gearlist),
-                inline=True
-            )
-        else:                        
-            embedresult_gearlist.add_field(
-                name="▫️ 현재 장착중인 장비 목록",
-                value=(gearlist),
-                inline=True
-            )
-            embedresult_gearlist.add_field(
-                name=chr(173),
-                value=(gearlist2),
-                inline=True
-            )
+                        for (const i in ItemList2) {
+                            try {
+                                eqname = response.data.Items[ItemList2[i]].Name
+                                tri = ""
 
-    embedresult_gearlist.set_footer(text="스타워즈")
+                                if (response.data.Items[ItemList2[i]].Tri !== "트라이포드 효과 적용 불가") {
+                                    for (const j in response.data.Items[ItemList2[i]].Tri) {
+                                        tri = tri + "[`" + response.data.Items[ItemList2[i]].Tri[j].SkillName + "`] " + response.data.Items[ItemList2[i]].Tri[j].Effect + "\n"
+                                    }
+                                }
+                                qualemoji = "⬜"
+                                qual = parseInt(response.data.Items[ItemList2[i]].Quality)
 
-    return embedresult_gearlist
+                                if (0 < qual && qual < 10) { qualemoji = "🟥" }
+                                if (10 <= qual && qual < 30) { qualemoji = "🟨" }
+                                if (30 <= qual && qual < 70) { qualemoji = "🟩" }
+                                if (70 <= qual && qual < 90) { qualemoji = "🟦" }
+                                if (90 <= qual && qual < 100) { qualemoji = "🟪" }
+                                if (qual === 100) { qualemoji = "🟧" }
 
-def embedresult_gear2list(response:json):
+                                gearlist2 = gearlist2 + ("**" + qualemoji + " " + eqname + "** \n [`품질`] : " + response.data.Items[ItemList2[i]].Quality + "\n" + tri) + "\n"
+                            } catch (error) {
+                            }
+                        }
+
+                        if (gearlist + gearlist2 === "") {
+                            gearlist = ("`장착된 장비가 없습니다./장비 데이터를 불러오지 못 했습니다`")
+                        }
+
+                        const gearlist_result = new MessageEmbed()
+                            .setColor('ORANGE')
+                            .setFooter({ text: 'Made By 모코코더#3931', iconURL: 'https://cdn.discordapp.com/avatars/693421981705568346/f7cf118ca37e88b490ad1ac1489416ea.webp' })
+                            .setTitle('장비');
+
+                        if (gearlist == "`장착된 장비가 없습니다./장비 데이터를 불러오지 못 했습니다`") {
+                            if (gearlist2 == "") {
+                                gearlist_result
+                                    .addFields(
+                                        {
+                                            name: "▫️ 현재 장착중인 장비 목록",
+                                            value: gearlist,
+                                            inline: true
+                                        }
+                                    )
+                            } else {
+                                gearlist_result
+                                    .addFields(
+                                        {
+                                            name: "▫️ 현재 장착중인 장비 목록",
+                                            value: gearlist2,
+                                            inline: true
+                                        }
+                                    )
+                            }
+                        } else {
+                            if (gearlist2 === "") {
+                                gearlist_result
+                                    .addFields(
+                                        {
+                                            name: "▫️ 현재 장착중인 장비 목록",
+                                            value: gearlist,
+                                            inline: true
+                                        }
+                                    )
+                            } else {
+                                gearlist_result
+                                    .addFields(
+                                        {
+                                            name: "▫️ 현재 장착중인 장비 목록",
+                                            value: gearlist,
+                                            inline: true
+                                        },
+                                        {
+                                            name: String.fromCharCode(173),
+                                            value: gearlist2,
+                                            inline: true
+                                        },
+                                    )
+                            }
+                        }
     ItemList = ["목걸이","귀걸이1","귀걸이2"]
     ItemList2 = ["반지1","반지2"]
     
