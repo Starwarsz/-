@@ -285,7 +285,7 @@ def embedresult_island(response:json):
 
     embedresult_island.set_footer(text="스타워즈")
 
-     return embedresult_island
+    return embedresult_island
 
 def embedresult_gearlist(response:json):
     ItemList = ["무기","머리 방어구","상의"]
@@ -300,9 +300,8 @@ def embedresult_gearlist(response:json):
         try:
             eqname = response["Items"][items]["Name"]
             tri = ""
-            if not response["Items"][items]["Tri"] == "트라이포드 효과 적용 불가":
-                for t in response["Items"][items]["Tri"]:
-                    tri = tri + "[`"+t["SkillName"] +"`] " + t["Effect"] + "\n"
+            for t in response["Items"][items]["Tri"]:
+                tri = tri + "[`"+t["SkillName"] +"`] " + t["Effect"] + "\n"
             gearlist = gearlist + ("**◻"+eqname + " | `품질` : " + response["Items"][items]["Quality"] + "**\n" + tri) + "\n"
         except Exception:
             pass
@@ -311,9 +310,8 @@ def embedresult_gearlist(response:json):
         try:
             eqname = response["Items"][items]["Name"]
             tri = ""
-            if not response["Items"][items]["Tri"] == "트라이포드 효과 적용 불가":
-                for t in response["Items"][items]["Tri"]:
-                    tri = tri + "[`"+t["SkillName"] +"`] " + t["Effect"] + "\n"
+            for t in response["Items"][items]["Tri"]:
+                tri = tri + "[`"+t["SkillName"] +"`] " + t["Effect"] + "\n"
             gearlist2 = gearlist2 + ("**◻"+eqname + " | `품질` : " + response["Items"][items]["Quality"] + "**\n" + tri) + "\n"
         except Exception:
             pass
