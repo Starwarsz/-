@@ -32,8 +32,14 @@ async def get_req2(url:str):
                 response = await resp.json()
                 return (response)
 
+@client.slash_command(name="정보",description="해당 닉네임 유저의 정보를 조회합니다.")
+async def 정보(ctx: discord.ApplicationContext, 닉네임: Option(str, "닉네임을 적으세요.", required=True, default=None)):
+    if ctx.guild is None:
+        await ctx.respond("DM금지")
+    else:
+        try:
+            await ctx.defer(ephemeral=True)
 
-<<<<<<< HEAD
             message = await ctx.interaction.original_message()
 
             loop = asyncio.get_event_loop()
@@ -71,9 +77,6 @@ async def get_req2(url:str):
             print(error)
 
 @client.slash_command(name="정보_표시",description="해당 닉네임 유저의 정보를 조회합니다.(다른 사람에게 표시)")
-=======
-@client.slash_command(name="정보",description="해당 닉네임 유저의 정보를 조회합니다.(다른 사람에게 표시)")
->>>>>>> 192e1b8304ff815e23329942a1b303190db0ef54
 async def 정보_표시(ctx: discord.ApplicationContext, 닉네임: Option(str, "닉네임을 적으세요.", required=True, default=None)):
     if ctx.guild is None:
         await ctx.respond("DM금지")
@@ -124,15 +127,19 @@ async def 모험섬(ctx: discord.ApplicationContext):
         await ctx.respond("DM금지")
     else:
         try:
+            await ctx.defer(ephemeral=False)
+            
+            message = await ctx.interaction.original_message()
+            
             loop = asyncio.get_event_loop()
             response = loop.run_until_complete(get_req('http://lostarkapi.ga/adventureisland/'))
 
             embedresult_island = calmodule.embedresult_island(response)
             
-            await ctx.respond("", embed=embedresult_island)
+            await message.edit("", embed=embedresult_island)
         except Exception as error:
             embederr = discord.Embed(title="알 수 없는 오류가 발생했습니다./몇 시간 이후 다시 시도해주세요.", color=discord.Color.red())
-            await ctx.respond("", embed=embederr, view=None)
+            await message.edit("", embed=embederr)
             print(error)
 
 @client.slash_command(name="사사게",description="사사게 확인")
@@ -197,17 +204,17 @@ async def 거래소(ctx: discord.ApplicationContext, 아이템: Option(str, "검
                 url = "http://lostarkapi.ga/tradeplus/"+str(아이템)
 
                 loop = asyncio.get_event_loop()
-                response = loop.run_until_complete(get_req(url))
+                response = loop.run_until_complete(get_req2(url))
 
                 if response["Result"] == "Failed":
                     if response["Reason"] == "No Result":
-                        embederr = discord.Embed(title="검색 결과가 없습니다.", color=discord.Color.red(), description="아바타 혹은 각인서는 검색이 불가능 할 수 있습니다.")
+                        embederr = discord.Embed(title="검색 결과가 없습니다.", color=discord.Color.red(), description="아바타는 검색이 불가능합니다.")
                         await message.edit("", embed=embederr)
                     if response["Reason"] == "Error":
-                        embederr = discord.Embed(title="알 수 없는 오류가 발생했습니다.", color=discord.Color.red(), description="아바타 혹은 각인서는 검색이 불가능 할 수 있습니다.")
+                        embederr = discord.Embed(title="알 수 없는 오류가 발생했습니다.", color=discord.Color.red(), description="아바타는 검색이 불가능합니다.")
                         await ctx.respond("", embed=embederr, view=None)
-                    if response["Reason"] == "점검중":
-                        embederr = discord.Embed(title="현재 거래소 검색 기능은 점검중입니다.", color=discord.Color.red())
+                    if response["Reason"] == "Too many results":
+                        embederr = discord.Embed(title="너무 많은 검색 결과가 있습니다. 더 자세하게 검색 해 주세요.", color=discord.Color.red())
                         await message.edit("", embed=embederr)
                 else:
                     if len(response["Data"]) > 1:
@@ -224,16 +231,17 @@ async def 거래소(ctx: discord.ApplicationContext, 아이템: Option(str, "검
                             inline=True
                         )
 
-                        embedresult.set_footer(text="스타워즈")
+                        embedresult.set_footer(text="Made By 썬콜")                     
 
-                        number = response["FirstItem"][0][response["FirstItem"][0].find(":")+2:]
+                        number = response["FirstItem"][0][response["FirstItem"][0].rfind(":")+2:]
+                        itemgrade = response["FirstItem"][0][:response["FirstItem"][0].find(" ")]
                         percount = str(response["FirstItem"][1]).replace("개 단위","")
 
                         if percount == "None":
                             percount = "1"                        
 
                         url2 = "http://lostarkapi.ga/trade/"+str(number)
-                        response2 = loop.run_until_complete(get_req(url2))
+                        response2 = loop.run_until_complete(get_req2(url2))
 
                         count = ""
                         price = ""
@@ -247,7 +255,7 @@ async def 거래소(ctx: discord.ApplicationContext, 아이템: Option(str, "검
                             i = i+1
 
 
-                        embedresult2 = discord.Embed(title="거래소", color=discord.Color.gold(), description="**["+response2["Name"]+"] "+percount+"개 단위**")
+                        embedresult2 = discord.Embed(title="거래소", color=discord.Color.gold(), description="**["+ itemgrade +"]["+response2["Name"]+"] "+percount+"개 단위**")
 
                         embedresult2.add_field(
                             name="▫️ 묶음 수량",
@@ -260,18 +268,19 @@ async def 거래소(ctx: discord.ApplicationContext, 아이템: Option(str, "검
                             inline=True
                         )
 
-                        embedresult2.set_footer(text="스타워즈")
+                        embedresult2.set_footer(text="Made By 썬콜")                     
 
                         await message.edit("", embed=embedresult, view=TradeOption(ctx, 아이템, message, embedresult, embedresult2))
                     else:
-                        number = response["FirstItem"][0][response["FirstItem"][0].find(":")+2:]
+                        number = response["FirstItem"][0][response["FirstItem"][0].rfind(":")+2:]
                         percount = str(response["FirstItem"][1]).replace("개 단위","")
+                        itemgrade = response["FirstItem"][0][:response["FirstItem"][0].find(" ")]
 
                         if percount == "None":
                             percount = "1"                        
 
                         url2 = "http://lostarkapi.ga/trade/"+str(number)
-                        response2 = loop.run_until_complete(get_req(url2))
+                        response2 = loop.run_until_complete(get_req2(url2))
 
                         count = ""
                         price = ""
@@ -285,7 +294,7 @@ async def 거래소(ctx: discord.ApplicationContext, 아이템: Option(str, "검
                             i = i+1
 
 
-                        embedresult = discord.Embed(title="거래소", color=discord.Color.gold(), description="**["+response2["Name"]+"] "+percount+"개 단위**")
+                        embedresult = discord.Embed(title="거래소", color=discord.Color.gold(), description="**["+ itemgrade +"]["+response2["Name"]+"] "+percount+"개 단위**")
 
                         embedresult.add_field(
                             name="▫️ 묶음 수량",
@@ -298,13 +307,27 @@ async def 거래소(ctx: discord.ApplicationContext, 아이템: Option(str, "검
                             inline=True
                         )
 
-                        embedresult.set_footer(text="스타워즈")
+                        embedresult.set_footer(text="Made By 썬콜")                     
 
                         await message.edit("", embed=embedresult)
             else:
                 await ctx.respond("2글자 이상으로 검색해주세요.")
         except Exception as error:
-            embederr = discord.Embed(title="알 수 없는 오류가 발생했습니다.", color=discord.Color.red(), description="아바타 혹은 각인서는 검색이 불가능 할 수 있습니다.")
+            embederr = discord.Embed(title="알 수 없는 오류가 발생했습니다.", color=discord.Color.red(), description="아바타는 검색이 불가능합니다.")
+            await ctx.respond("", embed=embederr, view=None)
+            print(error)
+
+@client.slash_command(name="공략",description="공략 확인")
+async def 공략(ctx: discord.ApplicationContext):
+    if ctx.guild is None:
+        await ctx.respond("DM금지")
+    else:
+        try:          
+            await ctx.defer(ephemeral=False)
+            message = await ctx.interaction.original_message()
+            await message.edit("https://media.discordapp.net/attachments/935529009251487810/946768903583973426/i13704437401.jpeg", view=HelpOption(ctx,message))
+        except Exception as error:
+            embederr = discord.Embed(title="알 수 없는 오류가 발생했습니다.", color=discord.Color.red())
             await ctx.respond("", embed=embederr, view=None)
             print(error)
 
@@ -322,6 +345,7 @@ class InfoOptions(discord.ui.View):
         self.embedres6 = embedres6
         self.embedres7 = embedres7
         self.embedres8 = embedres8
+        self.add_item(discord.ui.Button(label="문의", url="https://discord.gg/Bgsb7WkwVg", row=3))
         # self.add_item(discord.ui.Select(options=[
         #     discord.SelectOption(
         #         label="test"
@@ -391,5 +415,28 @@ class TradeOption(discord.ui.View):
     async def ChaSkill(self, button: discord.ui.Button, interaction: discord.Interaction):
         if not (str(interaction.message.embeds[0].title)) == "거래소":
             await interaction.response.edit_message(embed=self.embedres2, view=self)
+
+class HelpOption(discord.ui.View):
+    def __init__(self, ctx: commands.Context, msg: discord.Message):
+        super().__init__()
+        self.ctx = ctx
+        self.msg = msg
+        # self.add_item(discord.ui.Select(options=[
+        #     discord.SelectOption(
+        #         label="test"
+        #     )
+        # ]))
+
+    @discord.ui.button(label="발탄", style=discord.ButtonStyle.gray, custom_id="Bal")
+    async def Bal(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await self.msg.edit("https://media.discordapp.net/attachments/935529009251487810/946768903583973426/i13704437401.jpeg", view=self)
+
+    @discord.ui.button(label="비아", style=discord.ButtonStyle.gray, custom_id="Bia")
+    async def Bia(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await self.msg.edit("https://cdn.discordapp.com/attachments/935529009251487810/946774184451801088/i14057139075.jpeg", view=self)
+
+    @discord.ui.button(label="쿠크", style=discord.ButtonStyle.gray, custom_id="Cu")
+    async def Cu(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await self.msg.edit("https://cdn.discordapp.com/attachments/935529009251487810/946775136462311554/i15518900640.jpg", view=self)
 
 client.run(token)
