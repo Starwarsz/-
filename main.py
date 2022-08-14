@@ -37,7 +37,7 @@ async def get_req2(url:str):
             message = await ctx.interaction.original_message()
 
             loop = asyncio.get_event_loop()
-            response = loop.run_until_complete(get_req2('https://lostarkapi.ga/userinfo/'+str(닉네임)))
+            response = loop.run_until_complete(get_req2('https://lostarkapi.ga/userinfo/{{user_name}}')
 
             if not response["Result"] == "Failed":
                 if not response["Result"] == "1레벨":
