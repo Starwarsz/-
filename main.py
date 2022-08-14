@@ -37,7 +37,7 @@ async def get_req2(url:str):
             message = await ctx.interaction.original_message()
 
             loop = asyncio.get_event_loop()
-            response = loop.run_until_complete(get_req2('lostarkapi.ga/userinfo/'+str(닉네임)))
+            response = loop.run_until_complete(get_req2('http://lostarkapi.ga/userinfo/'+str(닉네임)))
 
             if not response["Result"] == "Failed":
                 if not response["Result"] == "1레벨":
@@ -84,7 +84,7 @@ async def 정보_표시(ctx: discord.ApplicationContext, 닉네임: Option(str, 
             message = await ctx.interaction.original_message()
 
             loop = asyncio.get_event_loop()
-            response = loop.run_until_complete(get_req2('lostarkapi.ga/userinfo/'+str(닉네임)))
+            response = loop.run_until_complete(get_req2('http://lostarkapi.ga/userinfo/'+str(닉네임)))
 
             if not response["Result"] == "Failed":
                 if not response["Result"] == "1레벨":
@@ -125,7 +125,7 @@ async def 모험섬(ctx: discord.ApplicationContext):
     else:
         try:
             loop = asyncio.get_event_loop()
-            response = loop.run_until_complete(get_req('lostarkapi.ga/adventureisland/'))
+            response = loop.run_until_complete(get_req('http://lostarkapi.ga/adventureisland/'))
 
             embedresult_island = calmodule.embedresult_island(response)
             
@@ -142,7 +142,7 @@ async def 사사게(ctx: discord.ApplicationContext, 닉네임: Option(str, "닉
     else:
         try:
             loop = asyncio.get_event_loop()
-            response = loop.run_until_complete(get_req('lostarkapi.ga/sasa/'+str(닉네임)))
+            response = loop.run_until_complete(get_req('http://lostarkapi.ga/sasa/'+str(닉네임)))
             
             embedresult_sasalist = calmodule.embedresult_sasalist(response, 닉네임)
             
@@ -173,7 +173,7 @@ async def 시세(ctx: discord.ApplicationContext):
     else:
         try:          
             loop = asyncio.get_event_loop()
-            response = loop.run_until_complete(get_req('lostarkapi.ga/crystal/'))
+            response = loop.run_until_complete(get_req('http://lostarkapi.ga/crystal/'))
 
             embedresult_crystal = calmodule.embedresult_crystal(response)
             
@@ -194,7 +194,7 @@ async def 거래소(ctx: discord.ApplicationContext, 아이템: Option(str, "검
 
                 message = await ctx.interaction.original_message()
 
-                url = "lostarkapi.ga/tradeplus/"+str(아이템)
+                url = "http://lostarkapi.ga/tradeplus/"+str(아이템)
 
                 loop = asyncio.get_event_loop()
                 response = loop.run_until_complete(get_req(url))
@@ -232,7 +232,7 @@ async def 거래소(ctx: discord.ApplicationContext, 아이템: Option(str, "검
                         if percount == "None":
                             percount = "1"                        
 
-                        url2 = "lostarkapi.ga/trade/"+str(number)
+                        url2 = "http://lostarkapi.ga/trade/"+str(number)
                         response2 = loop.run_until_complete(get_req(url2))
 
                         count = ""
@@ -270,7 +270,7 @@ async def 거래소(ctx: discord.ApplicationContext, 아이템: Option(str, "검
                         if percount == "None":
                             percount = "1"                        
 
-                        url2 = "lostarkapi.ga/trade/"+str(number)
+                        url2 = "http://lostarkapi.ga/trade/"+str(number)
                         response2 = loop.run_until_complete(get_req(url2))
 
                         count = ""
