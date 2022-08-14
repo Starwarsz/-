@@ -32,51 +32,8 @@ async def get_req2(url:str):
                 response = await resp.json()
                 return (response)
 
-@client.slash_command(name="정보",description="해당 닉네임 유저의 정보를 조회합니다.")
-async def 정보(ctx: discord.ApplicationContext, 닉네임: Option(str, "닉네임을 적으세요.", required=True, default=None)):
-    if ctx.guild is None:
-        await ctx.respond("DM금지")
-    else:
-        try:
-            await ctx.defer(ephemeral=True)
 
-            message = await ctx.interaction.original_message()
-
-            loop = asyncio.get_event_loop()
-            response = loop.run_until_complete(get_req2('http://lostarkapi.ga//userinfo/'+str(닉네임)))
-
-            if not response["Result"] == "Failed":
-                if not response["Result"] == "1레벨":
-
-                    embedresult = calmodule.embedresult(response)
-
-                    embedresult_lister = calmodule.embedresult_lister(response)
-                    
-                    embedskill = calmodule.embedskill(response)
-                    
-                    embedresult_jewlist = calmodule.embedresult_jewlist(response)
-
-                    embedresult_goldget = calmodule.embedresult_goldget(response)
-                    
-                    embedresult_sasalist = calmodule.embedresult_sasalist(response["Sasa"], 닉네임)                    
-
-                    embedresult_gearlist = calmodule.embedresult_gearlist(response)
-
-                    embedresult_gear2list = calmodule.embedresult_gear2list(response)
-
-                    await message.edit("", embed=embedresult, view=InfoOptions(ctx, 닉네임, message, embedresult, embedresult_lister, embedskill, embedresult_jewlist, embedresult_goldget, embedresult_sasalist, embedresult_gearlist, embedresult_gear2list))
-                else:
-                    embedtoolow = discord.Embed(title="해당 캐릭터는 레벨이 1 미만입니다.", color=discord.Color.dark_gold())
-                    await message.edit("", embed=embedtoolow, view=None)
-            else:
-                embederr = discord.Embed(title="정보처리 과정 중 알 수 없는 오류가 발생했습니다.\n(없는 캐릭터,너무 많은 조회로 인한 서버이용 불가 등)", color=discord.Color.red())
-                await message.edit("", embed=embederr, view=None)
-        except Exception as error:
-            embederr = discord.Embed(title="정보처리 과정 중 알 수 없는 오류가 발생했습니다.\n(없는 캐릭터,너무 많은 조회로 인한 서버이용 불가 등)", color=discord.Color.red())
-            await ctx.respond("", embed=embederr, view=None)
-            print(error)
-
-@client.slash_command(name="정보_표시",description="해당 닉네임 유저의 정보를 조회합니다.(다른 사람에게 표시)")
+@client.slash_command(name="정보",description="해당 닉네임 유저의 정보를 조회합니다.(다른 사람에게 표시)")
 async def 정보_표시(ctx: discord.ApplicationContext, 닉네임: Option(str, "닉네임을 적으세요.", required=True, default=None)):
     if ctx.guild is None:
         await ctx.respond("DM금지")
