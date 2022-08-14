@@ -32,14 +32,8 @@ async def get_req2(url:str):
                 response = await resp.json()
                 return (response)
 
-@client.slash_command(name="정보",description="해당 닉네임 유저의 정보를 조회합니다.")
-async def 정보(ctx: discord.ApplicationContext, 닉네임: Option(str, "닉네임을 적으세요.", required=True, default=None)):
-    if ctx.guild is None:
-        await ctx.respond("DM금지")
-    else:
-        try:
-            await ctx.defer(ephemeral=True)
 
+<<<<<<< HEAD
             message = await ctx.interaction.original_message()
 
             loop = asyncio.get_event_loop()
@@ -77,6 +71,9 @@ async def 정보(ctx: discord.ApplicationContext, 닉네임: Option(str, "닉네
             print(error)
 
 @client.slash_command(name="정보_표시",description="해당 닉네임 유저의 정보를 조회합니다.(다른 사람에게 표시)")
+=======
+@client.slash_command(name="정보",description="해당 닉네임 유저의 정보를 조회합니다.(다른 사람에게 표시)")
+>>>>>>> 192e1b8304ff815e23329942a1b303190db0ef54
 async def 정보_표시(ctx: discord.ApplicationContext, 닉네임: Option(str, "닉네임을 적으세요.", required=True, default=None)):
     if ctx.guild is None:
         await ctx.respond("DM금지")
@@ -325,7 +322,6 @@ class InfoOptions(discord.ui.View):
         self.embedres6 = embedres6
         self.embedres7 = embedres7
         self.embedres8 = embedres8
-        self.add_item(discord.ui.Button(label="문의", url="https://discord.gg/D3gRDmbkJK", row=3))
         # self.add_item(discord.ui.Select(options=[
         #     discord.SelectOption(
         #         label="test"
