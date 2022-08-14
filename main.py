@@ -125,7 +125,7 @@ async def 모험섬(ctx: discord.ApplicationContext):
     else:
         try:
             loop = asyncio.get_event_loop()
-            response = loop.run_until_complete(get_req('http://lostarkapi.ga/adventureisland/'))
+            response = loop.run_until_complete(get_req(http://lostarkapi.ga/adventureisland/))
 
             embedresult_island = calmodule.embedresult_island(response)
             
